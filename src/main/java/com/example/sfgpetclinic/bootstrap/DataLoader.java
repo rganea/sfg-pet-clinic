@@ -1,16 +1,11 @@
 package com.example.sfgpetclinic.bootstrap;
 
 import com.example.sfgpetclinic.model.Owner;
-import com.example.sfgpetclinic.model.Pet;
 import com.example.sfgpetclinic.model.Vet;
 import com.example.sfgpetclinic.services.OwnerService;
 import com.example.sfgpetclinic.services.VetService;
-import com.example.sfgpetclinic.services.map.OwnerServiceMap;
-import com.example.sfgpetclinic.services.map.VetServiceMap;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component //becomes a spring bean and spring context sees it
 public class DataLoader implements CommandLineRunner {
@@ -18,10 +13,13 @@ public class DataLoader implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
 
-
-    public DataLoader() {
-        ownerService = new OwnerServiceMap();
-        vetService = new VetServiceMap();
+//@Autowired not required anymore because of the constructor
+//injected into the constructor - spring IoC will wire up into the context
+    public DataLoader(OwnerService ownerService, VetService vetService) {
+//        ownerService = new OwnerServiceMap();
+//        vetService = new VetServiceMap();
+        this.ownerService = ownerService;
+        this.vetService = vetService;
     }
 
     @Override
