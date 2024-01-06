@@ -1,11 +1,9 @@
 package com.example.sfgpetclinic.bootstrap;
 
-import com.example.sfgpetclinic.model.Owner;
-import com.example.sfgpetclinic.model.Pet;
-import com.example.sfgpetclinic.model.PetType;
-import com.example.sfgpetclinic.model.Vet;
+import com.example.sfgpetclinic.model.*;
 import com.example.sfgpetclinic.services.OwnerService;
 import com.example.sfgpetclinic.services.PetTypeService;
+import com.example.sfgpetclinic.services.SpecialtiesService;
 import com.example.sfgpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -18,20 +16,30 @@ public class DataLoader implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
     private final PetTypeService petTypeService;
+    private final SpecialtiesService specialtiesService;
 
 //@Autowired not required anymore because of the constructor
 //injected into the constructor - spring IoC will wire up into the context
-    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService) {
+    public DataLoader(OwnerService ownerService, VetService vetService, PetTypeService petTypeService, SpecialtiesService specialtiesService) {
 //        ownerService = new OwnerServiceMap();
 //        vetService = new VetServiceMap();
         this.ownerService = ownerService;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
+        this.specialtiesService = specialtiesService;
     }
 
     @Override
     public void run(String... args) throws Exception {
 
+        int count = petTypeService.findAll().size();
+
+        if(count==0) {
+            loadData();
+        }
+    }
+
+    private void loadData() {
         PetType dog = new PetType();
         dog.setName("Dog");
         PetType savedDogPetType = petTypeService.save(dog);
@@ -76,21 +84,28 @@ public class DataLoader implements CommandLineRunner {
 
         System.out.println("Loading owners....");
 
+        Specialty radiology = new Specialty();
+        radiology.setDescription("Radiology");
+        Specialty savedRadiology = specialtiesService.save(radiology);
+
+        Specialty dentistry = new Specialty();
+        radiology.setDescription("Dentistry");
+        Specialty savedDentistry = specialtiesService.save(dentistry);
+
         Vet vet1 = new Vet();
         vet1.setFirstName("Sam");
         vet1.setLastName("Axe");
+        vet1.getSpecialties().add(savedDentistry);
+
 
         vetService.save(vet1);
 
         Vet vet2 = new Vet();
         vet2.setFirstName("Pam");
         vet2.setLastName("Max");
+        vet2.getSpecialties().add(savedRadiology);
 
         vetService.save(vet2);
         System.out.println("Loading vets....");
-
-
-
-
     }
 }
