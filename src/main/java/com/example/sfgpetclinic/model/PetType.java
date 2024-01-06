@@ -2,7 +2,7 @@ package com.example.sfgpetclinic.model;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 
-public class PetType extends Serializers.Base {
+public class PetType extends BaseEntity {
 
     private String name;
 
